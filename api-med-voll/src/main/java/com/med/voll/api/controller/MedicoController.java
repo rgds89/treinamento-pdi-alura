@@ -2,6 +2,8 @@ package com.med.voll.api.controller;
 
 import com.med.voll.api.MedicoService;
 import com.med.voll.api.dto.MedicoDTO;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,8 @@ public class MedicoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrar(@RequestBody MedicoDTO medicoDTO){
+    @Transactional
+    public void cadastrar(@RequestBody @Valid MedicoDTO medicoDTO){
         medicoService.cadastrar(medicoDTO);
     }
 }
