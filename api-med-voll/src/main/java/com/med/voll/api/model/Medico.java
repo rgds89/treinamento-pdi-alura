@@ -4,6 +4,8 @@ import com.med.voll.api.enums.Especialidade;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name ="medvoll_medico")
 @Data
@@ -23,4 +25,7 @@ public class Medico {
     @OneToOne
     @JoinColumn(name="id_endereco")
     private Endereco endereco;
+    @OneToMany
+    @JoinColumn(name = "id_medico")
+    private List<Telefone> telefones;
 }

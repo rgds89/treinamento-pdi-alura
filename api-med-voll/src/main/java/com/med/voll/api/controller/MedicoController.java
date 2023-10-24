@@ -1,6 +1,6 @@
 package com.med.voll.api.controller;
 
-import com.med.voll.api.MedicoService;
+import com.med.voll.api.service.MedicoService;
 import com.med.voll.api.dto.MedicoDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
