@@ -1,15 +1,17 @@
 package com.med.voll.api.controller;
 
 import com.med.voll.api.dto.ListaMedicoDTO;
-import com.med.voll.api.service.MedicoService;
 import com.med.voll.api.dto.MedicoDTO;
+import com.med.voll.api.service.MedicoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/medicos")
@@ -26,7 +28,7 @@ public class MedicoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ListaMedicoDTO> findMedicos(){
-        return medicoService.findMedicos();
+    public Page<ListaMedicoDTO> findMedicos(Pageable paginacao){
+        return medicoService.findMedicos(paginacao);
     }
 }

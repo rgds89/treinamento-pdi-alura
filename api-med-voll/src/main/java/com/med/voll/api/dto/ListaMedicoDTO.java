@@ -1,14 +1,10 @@
 package com.med.voll.api.dto;
 
 import com.med.voll.api.enums.Especialidade;
-import lombok.Builder;
-import lombok.Data;
+import com.med.voll.api.model.Medico;
 
-@Data
-@Builder
-public class ListaMedicoDTO {
-    private String nome;
-    private String email;
-    private Long crm;
-    private Especialidade especialidade;
+public record ListaMedicoDTO (String nome, String email, Long crm, Especialidade especialidade){
+    public ListaMedicoDTO(Medico medico) {
+        this(medico.getNome(), medico.getEmail(), medico.getCrm(), medico.getEspecialidade());
+    }
 }

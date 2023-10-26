@@ -9,12 +9,15 @@ import com.med.voll.api.repository.EnderecoRepository;
 import com.med.voll.api.repository.MedicoRepository;
 import com.med.voll.api.repository.TelefoneRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,19 +40,8 @@ public class MedicoService {
 
     }
 
-    public List<ListaMedicoDTO> findMedicos(){
-        List<ListaMedicoDTO> lista = new ArrayList<>();
-        List<Medico>  medicos = medicoRepository.findAll();
-        medicos.forEach(x ->{
-            ListaMedicoDTO listaMedicoDTO = ListaMedicoDTO.builder()
-                    .nome(x.getNome())
-                    .email(x.getEmail())
-                    .crm(x.getCrm())
-                    .especialidade(x.getEspecialidade())
-                    .build();
-            lista.add(listaMedicoDTO);
-        });
-        return lista;
+    public Page<ListaMedicoDTO> findMedicos(Pageable paginacao){
+        return medicoRepository.findAll(paginacao).map(ListaMedicoDTO::new);
     }
 
     private void build(MedicoDTO medicoDTO) {
