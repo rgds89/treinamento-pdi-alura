@@ -1,5 +1,6 @@
 package com.med.voll.api.service;
 
+import com.med.voll.api.dto.ListaMedicoDTO;
 import com.med.voll.api.dto.MedicoDTO;
 import com.med.voll.api.model.Endereco;
 import com.med.voll.api.model.Medico;
@@ -10,8 +11,10 @@ import com.med.voll.api.repository.TelefoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,21 @@ public class MedicoService {
         medicoRepository.save(medico);
         telefoneRepository.saveAll(telefones);
 
+    }
+
+    public List<ListaMedicoDTO> findMedicos(){
+        List<ListaMedicoDTO> lista = new ArrayList<>();
+        List<Medico>  medicos = medicoRepository.findAll();
+        medicos.forEach(x ->{
+            ListaMedicoDTO listaMedicoDTO = ListaMedicoDTO.builder()
+                    .nome(x.getNome())
+                    .email(x.getEmail())
+                    .crm(x.getCrm())
+                    .especialidade(x.getEspecialidade())
+                    .build();
+            lista.add(listaMedicoDTO);
+        });
+        return lista;
     }
 
     private void build(MedicoDTO medicoDTO) {
