@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class EnderecoDTO {
+public class CadastraEnderecoDTO {
     @NotBlank
     private String logradouro;
     @NotBlank

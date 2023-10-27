@@ -1,7 +1,9 @@
 package com.med.voll.api.service;
 
+import com.med.voll.api.dto.AtualizaMedicoDTO;
+import com.med.voll.api.dto.AtualizaTelefoneDTO;
 import com.med.voll.api.dto.ListaMedicoDTO;
-import com.med.voll.api.dto.MedicoDTO;
+import com.med.voll.api.dto.CadastraMedicoDTO;
 import com.med.voll.api.model.Endereco;
 import com.med.voll.api.model.Medico;
 import com.med.voll.api.model.Telefone;
@@ -11,7 +13,6 @@ import com.med.voll.api.repository.TelefoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -32,8 +33,8 @@ public class MedicoService {
 
     private List<Telefone> telefones = new ArrayList<>();
 
-    public void cadastrar(MedicoDTO medicoDTO) {
-        build(medicoDTO);
+    public void cadastrar(CadastraMedicoDTO cadastraMedicoDTO) {
+        build(cadastraMedicoDTO);
         enderecoRepository.save(endereco);
         medicoRepository.save(medico);
         telefoneRepository.saveAll(telefones);
@@ -44,27 +45,27 @@ public class MedicoService {
         return medicoRepository.findAll(paginacao).map(ListaMedicoDTO::new);
     }
 
-    private void build(MedicoDTO medicoDTO) {
+    private void build(CadastraMedicoDTO cadastraMedicoDTO) {
         endereco = Endereco.builder()
-                .logradouro(medicoDTO.getEndereco().getLogradouro())
-                .numero(medicoDTO.getEndereco().getNumero())
-                .complemento(medicoDTO.getEndereco().getComplemento())
-                .bairro(medicoDTO.getEndereco().getBairro())
-                .cidade(medicoDTO.getEndereco().getCidade())
-                .uf(medicoDTO.getEndereco().getUf())
-                .cep(medicoDTO.getEndereco().getCep())
+                .logradouro(cadastraMedicoDTO.getEndereco().getLogradouro())
+                .numero(cadastraMedicoDTO.getEndereco().getNumero())
+                .complemento(cadastraMedicoDTO.getEndereco().getComplemento())
+                .bairro(cadastraMedicoDTO.getEndereco().getBairro())
+                .cidade(cadastraMedicoDTO.getEndereco().getCidade())
+                .uf(cadastraMedicoDTO.getEndereco().getUf())
+                .cep(cadastraMedicoDTO.getEndereco().getCep())
                 .build();
 
         medico = Medico.builder()
-                .nome(medicoDTO.getNome())
-                .email(medicoDTO.getEmail())
-                .crm(medicoDTO.getCrm())
+                .nome(cadastraMedicoDTO.getNome())
+                .email(cadastraMedicoDTO.getEmail())
+                .crm(cadastraMedicoDTO.getCrm())
                 .endereco(endereco)
-                .especialidade(medicoDTO.getEspecialidade())
+                .especialidade(cadastraMedicoDTO.getEspecialidade())
                 .telefones(telefones)
                 .build();
 
-        medicoDTO.getTelefones().forEach(x -> {
+        cadastraMedicoDTO.getTelefones().forEach(x -> {
             Telefone telefone = Telefone.builder()
                     .ddd(x.getDdd())
                     .numero(x.getNumero())
@@ -72,5 +73,43 @@ public class MedicoService {
                     .build();
             telefones.add(telefone);
         });
+    }
+
+    public AtualizaMedicoDTO atualizar(AtualizaMedicoDTO atualizaMedicoDTO) {
+        medico = medicoRepository.findById(atualizaMedicoDTO.getId()).get();
+        Telefone telefone = telefoneRepository.findById(atualizaMedicoDTO.getTelefone().getId()).get();
+
+        telefone.setDdd(atualizaMedicoDTO.getTelefone().getDdd() != null ?
+                !atualizaMedicoDTO.getTelefone().getDdd().isEmpty() ?
+                        atualizaMedicoDTO.getTelefone().getDdd() : telefone.getDdd() :
+                telefone.getDdd());
+        telefone.setNumero(atualizaMedicoDTO.getTelefone().getNumero() != null ?
+                !atualizaMedicoDTO.getTelefone().getNumero().isEmpty() ?
+                        atualizaMedicoDTO.getTelefone().getNumero() : telefone.getNumero() :
+                telefone.getNumero());
+
+        medico.setNome(atualizaMedicoDTO.getNome() != null ?
+                !atualizaMedicoDTO.getNome().isEmpty() ?
+                        atualizaMedicoDTO.getNome() : medico.getNome() :
+                medico.getNome());
+
+        medico.setEmail(atualizaMedicoDTO.getEmail() != null ?
+                !atualizaMedicoDTO.getEmail().isEmpty() ?
+                        atualizaMedicoDTO.getEmail() : medico.getEmail() :
+                medico.getEmail());
+
+        telefoneRepository.save(telefone);
+        medicoRepository.save(medico);
+
+        return  AtualizaMedicoDTO.builder()
+                .id(medico.getId())
+                .nome(medico.getNome())
+                .email(medico.getEmail())
+                .telefone(
+                        AtualizaTelefoneDTO.builder()
+                                .ddd(telefone.getDdd())
+                                .numero(telefone.getNumero())
+                                .build())
+                .build();
     }
 }

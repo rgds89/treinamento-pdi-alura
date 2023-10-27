@@ -11,7 +11,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class MedicoDTO {
+public class CadastraMedicoDTO {
     @NotBlank
     private String nome;
     @NotBlank
@@ -24,8 +24,8 @@ public class MedicoDTO {
     private Especialidade especialidade;
     @NotNull
     @Valid
-    private EnderecoDTO endereco;
+    private CadastraEnderecoDTO endereco;
     @NotNull
     @Valid
-    private List<TelefoneDTO> telefones;
+    private List<CadastraTelefoneDTO> telefones;
 }

@@ -1,7 +1,8 @@
 package com.med.voll.api.controller;
 
+import com.med.voll.api.dto.AtualizaMedicoDTO;
 import com.med.voll.api.dto.ListaMedicoDTO;
-import com.med.voll.api.dto.MedicoDTO;
+import com.med.voll.api.dto.CadastraMedicoDTO;
 import com.med.voll.api.service.MedicoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -23,13 +24,20 @@ public class MedicoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public void cadastrar(@RequestBody @Valid MedicoDTO medicoDTO){
-        medicoService.cadastrar(medicoDTO);
+    public void cadastrar(@RequestBody @Valid CadastraMedicoDTO cadastraMedicoDTO){
+        medicoService.cadastrar(cadastraMedicoDTO);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<ListaMedicoDTO> findMedicos(@PageableDefault(size = 10, sort = {"nome"})  Pageable paginacao){
         return medicoService.findMedicos(paginacao);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public AtualizaMedicoDTO atualizar(@RequestBody @Valid  AtualizaMedicoDTO atualizaMedicoDTO){
+        return medicoService.atualizar(atualizaMedicoDTO);
     }
 }
