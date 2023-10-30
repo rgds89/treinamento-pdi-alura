@@ -28,4 +28,6 @@ public class Medico {
     @OneToMany
     @JoinColumn(name = "id_medico")
     private List<Telefone> telefones;
+    @Builder.Default
+    private Boolean ativo = true;
 }

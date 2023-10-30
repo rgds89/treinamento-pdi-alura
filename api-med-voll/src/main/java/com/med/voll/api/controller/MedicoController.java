@@ -40,4 +40,11 @@ public class MedicoController {
     public AtualizaMedicoDTO atualizar(@RequestBody @Valid  AtualizaMedicoDTO atualizaMedicoDTO){
         return medicoService.atualizar(atualizaMedicoDTO);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void deletar(@PathVariable Long id){
+        medicoService.deletar(id);
+    }
 }

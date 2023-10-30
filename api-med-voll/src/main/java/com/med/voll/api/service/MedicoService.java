@@ -42,7 +42,7 @@ public class MedicoService {
     }
 
     public Page<ListaMedicoDTO> findMedicos(Pageable paginacao){
-        return medicoRepository.findAll(paginacao).map(ListaMedicoDTO::new);
+        return medicoRepository.findAllByAtivoTrue(paginacao).map(ListaMedicoDTO::new);
     }
 
     private void build(CadastraMedicoDTO cadastraMedicoDTO) {
@@ -111,5 +111,11 @@ public class MedicoService {
                                 .numero(telefone.getNumero())
                                 .build())
                 .build();
+    }
+
+    public void deletar(Long id) {
+        medico = medicoRepository.findById(id).get();
+        medico.setAtivo(false);
+        medicoRepository.save(medico);
     }
 }
