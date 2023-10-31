@@ -1,5 +1,6 @@
-package com.med.voll.api.dto;
+package com.med.voll.api.dto.medico;
 
+import com.med.voll.api.dto.telefone.AtualizaTelefoneDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

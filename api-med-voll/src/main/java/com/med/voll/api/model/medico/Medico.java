@@ -1,6 +1,8 @@
-package com.med.voll.api.model;
+package com.med.voll.api.model.medico;
 
 import com.med.voll.api.enums.Especialidade;
+import com.med.voll.api.model.endereco.Endereco;
+import com.med.voll.api.model.telefone.Telefone;
 import jakarta.persistence.*;
 import lombok.*;
 

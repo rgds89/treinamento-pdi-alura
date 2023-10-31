@@ -1,9 +1,10 @@
-package com.med.voll.api.controller;
+package com.med.voll.api.controller.medico;
 
-import com.med.voll.api.dto.AtualizaMedicoDTO;
-import com.med.voll.api.dto.ListaMedicoDTO;
-import com.med.voll.api.dto.CadastraMedicoDTO;
-import com.med.voll.api.service.MedicoService;
+
+import com.med.voll.api.dto.medico.AtualizaMedicoDTO;
+import com.med.voll.api.dto.medico.CadastraMedicoDTO;
+import com.med.voll.api.dto.medico.ListaMedicoDTO;
+import com.med.voll.api.service.medico.MedicoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

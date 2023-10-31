@@ -1,4 +1,4 @@
-package com.med.voll.api.dto;
+package com.med.voll.api.dto.endereco;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

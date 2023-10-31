@@ -1,26 +1,24 @@
-package com.med.voll.api.model;
+package com.med.voll.api.model.telefone;
 
-
+import com.med.voll.api.model.medico.Medico;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name="medvoll_endereco")
+@Table(name = "medvoll_telefone")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of ="id")
 @Builder
-public class Endereco {
+public class Telefone {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-    private String logradouro;
-    private String bairro;
+    private String ddd;
     private String numero;
-    private String complemento;
-    private Long cep;
-    private String cidade;
-    private String uf;
+    @ManyToOne
+    @JoinColumn(name = "id_medico")
+    private Medico medico;
 }

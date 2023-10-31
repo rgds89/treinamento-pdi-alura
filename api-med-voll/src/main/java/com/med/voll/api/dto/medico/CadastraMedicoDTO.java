@@ -1,5 +1,7 @@
-package com.med.voll.api.dto;
+package com.med.voll.api.dto.medico;
 
+import com.med.voll.api.dto.endereco.CadastraEnderecoDTO;
+import com.med.voll.api.dto.telefone.CadastraTelefoneDTO;
 import com.med.voll.api.enums.Especialidade;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;

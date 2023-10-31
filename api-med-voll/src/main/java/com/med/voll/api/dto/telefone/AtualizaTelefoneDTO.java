@@ -1,4 +1,4 @@
-package com.med.voll.api.dto;
+package com.med.voll.api.dto.telefone;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
