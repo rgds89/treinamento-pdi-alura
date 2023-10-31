@@ -6,6 +6,7 @@ import com.med.voll.api.model.telefone.Telefone;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of ="id")
 @Builder
-public class Medico {
+public class Medico implements Serializable {
+    private static final long serialVersionUID = 1373306994731249219L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

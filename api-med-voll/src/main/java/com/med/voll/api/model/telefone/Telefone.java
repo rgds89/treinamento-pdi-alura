@@ -4,6 +4,8 @@ import com.med.voll.api.model.medico.Medico;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "medvoll_telefone")
 @Data
@@ -11,7 +13,8 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(of ="id")
 @Builder
-public class Telefone {
+public class Telefone implements Serializable {
+    private static final long serialVersionUID = -8683875028732445726L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
