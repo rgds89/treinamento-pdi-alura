@@ -27,16 +27,8 @@ public class TelefoneService {
 
     public Telefone atualizar(AtualizaTelefoneDTO atualizaTelefoneDTO){
         Telefone telefone = telefoneRepository.findById(atualizaTelefoneDTO.getId()).get();
-
-        telefone.setDdd(atualizaTelefoneDTO.getDdd() != null ?
-                !atualizaTelefoneDTO.getDdd().isEmpty() ?
-                        atualizaTelefoneDTO.getDdd() : telefone.getDdd() :
-                telefone.getDdd());
-        telefone.setNumero(atualizaTelefoneDTO.getNumero() != null ?
-                !atualizaTelefoneDTO.getNumero().isEmpty() ?
-                        atualizaTelefoneDTO.getNumero() : telefone.getNumero() :
-                telefone.getNumero());
-
+        telefone.setDdd(atualizaTelefoneDTO.getDdd() != null ? atualizaTelefoneDTO.getDdd() : telefone.getDdd());
+        telefone.setNumero(atualizaTelefoneDTO.getNumero() != null ? atualizaTelefoneDTO.getNumero() : telefone.getNumero());
         return  telefoneRepository.save(telefone);
     }
 

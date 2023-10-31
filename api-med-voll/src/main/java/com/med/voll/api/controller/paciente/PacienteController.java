@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.beans.Transient;
 
 @RestController
-@RequestMapping("pacientes")
+@RequestMapping("/pacientes")
 @RequiredArgsConstructor
 public class PacienteController {
     private final PacienteService pacienteService;
@@ -35,7 +35,7 @@ public class PacienteController {
         pacienteService.atualizar(atualizaPacienteDTO);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Transactional
     @ResponseStatus(HttpStatus.OK)
     public void deletar(@PathVariable Long id){

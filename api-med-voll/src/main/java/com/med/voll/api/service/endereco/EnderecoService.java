@@ -36,13 +36,13 @@ public class EnderecoService {
         Endereco endereco = enderecoRepository.findById(atualizaEnderecoDTO.getId()).get();
         enderecoRepository.save(
                 Endereco.builder()
-                        .logradouro(atualizaEnderecoDTO.getLogradouro() != null || !atualizaEnderecoDTO.getLogradouro().isEmpty() ? atualizaEnderecoDTO.getLogradouro() : endereco.getLogradouro())
-                        .numero(atualizaEnderecoDTO.getNumero() != null || !atualizaEnderecoDTO.getNumero().isEmpty() ? atualizaEnderecoDTO.getNumero() : endereco.getNumero())
-                        .complemento(atualizaEnderecoDTO.getComplemento() != null || !atualizaEnderecoDTO.getComplemento().isEmpty() ? atualizaEnderecoDTO.getComplemento(): endereco.getComplemento())
-                        .bairro(atualizaEnderecoDTO.getBairro() != null || !atualizaEnderecoDTO.getBairro().isEmpty() ? atualizaEnderecoDTO.getBairro() : endereco.getBairro())
-                        .cep(atualizaEnderecoDTO.getCep() != null || !atualizaEnderecoDTO.getCep().describeConstable().isEmpty() ? atualizaEnderecoDTO.getCep() : endereco.getCep())
-                        .cidade(atualizaEnderecoDTO.getCidade() != null  || !atualizaEnderecoDTO.getCidade().isEmpty() ? atualizaEnderecoDTO.getCidade() : endereco.getCidade())
-                        .uf(atualizaEnderecoDTO.getUf() != null || !atualizaEnderecoDTO.getUf().isEmpty() ? atualizaEnderecoDTO.getUf() : endereco.getUf())
+                        .logradouro(atualizaEnderecoDTO.getLogradouro() != null ? atualizaEnderecoDTO.getLogradouro() : endereco.getLogradouro())
+                        .numero(atualizaEnderecoDTO.getNumero() != null ? atualizaEnderecoDTO.getNumero() : endereco.getNumero())
+                        .complemento(atualizaEnderecoDTO.getComplemento() != null ? atualizaEnderecoDTO.getComplemento(): endereco.getComplemento())
+                        .bairro(atualizaEnderecoDTO.getBairro() != null ? atualizaEnderecoDTO.getBairro() : endereco.getBairro())
+                        .cep(atualizaEnderecoDTO.getCep() != null ? atualizaEnderecoDTO.getCep() : endereco.getCep())
+                        .cidade(atualizaEnderecoDTO.getCidade() != null ? atualizaEnderecoDTO.getCidade() : endereco.getCidade())
+                        .uf(atualizaEnderecoDTO.getUf() != null ? atualizaEnderecoDTO.getUf() : endereco.getUf())
                         .build());
     }
 }

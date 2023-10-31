@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class AtualizaEnderecoDTO {
-    @NotNull
     private Long id;
     private String logradouro;
     private String bairro;

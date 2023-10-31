@@ -32,19 +32,9 @@ public class MedicoService {
     public AtualizaMedicoDTO atualizar(AtualizaMedicoDTO atualizaMedicoDTO) {
         Telefone telefone = telefoneService.atualizar(atualizaMedicoDTO.getTelefone());
         Medico medico = medicoRepository.findById(atualizaMedicoDTO.getId()).get();
-
-        medico.setNome(atualizaMedicoDTO.getNome() != null ?
-                !atualizaMedicoDTO.getNome().isEmpty() ?
-                        atualizaMedicoDTO.getNome() : medico.getNome() :
-                medico.getNome());
-
-        medico.setEmail(atualizaMedicoDTO.getEmail() != null ?
-                !atualizaMedicoDTO.getEmail().isEmpty() ?
-                        atualizaMedicoDTO.getEmail() : medico.getEmail() :
-                medico.getEmail());
-
+        medico.setNome(atualizaMedicoDTO.getNome() != null ? atualizaMedicoDTO.getNome() : medico.getNome());
+        medico.setEmail(atualizaMedicoDTO.getEmail() != null ? atualizaMedicoDTO.getEmail() : medico.getEmail());
         medicoRepository.save(medico);
-
         return AtualizaMedicoDTO.builder()
                 .id(medico.getId())
                 .nome(medico.getNome())

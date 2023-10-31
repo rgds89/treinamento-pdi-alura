@@ -9,4 +9,4 @@ create table if not exists medvoll_paciente(
     primary key(id)
 ) ENGINE = innodb  default charset=UTF8;
 
-alter table medvoll_paciente add constraint fk_endereco foreign key (id_endereco) references medvoll_endereco (id);
+alter table medvoll_paciente add constraint fk_endereco_paciente foreign key (id_endereco) references medvoll_endereco (id);

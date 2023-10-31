@@ -17,31 +17,32 @@ public class PacienteService {
     private final PacienteRepositoy pacienteRepositoy;
     private final EnderecoService enderecoService;
 
-    public void cadastrar(CadastraPacienteDTO cadastraPacienteDTO){
+    public void cadastrar(CadastraPacienteDTO cadastraPacienteDTO) {
         pacienteRepositoy.save(build(cadastraPacienteDTO));
     }
 
-    public void atualizar(AtualizaPacienteDTO atualizaPacienteDTO){
+    public void atualizar(AtualizaPacienteDTO atualizaPacienteDTO) {
         Paciente paciente = pacienteRepositoy.findById(atualizaPacienteDTO.getId()).get();
-        enderecoService.atualizar(atualizaPacienteDTO.getEndereco());
-
-        paciente.setNome(atualizaPacienteDTO.getNome() != null || !atualizaPacienteDTO.getNome().isEmpty() ? atualizaPacienteDTO.getNome() : paciente.getNome());
-        paciente.setTelefone(atualizaPacienteDTO.getTelefone() != null || !atualizaPacienteDTO.getTelefone().isEmpty() ? atualizaPacienteDTO.getTelefone() : paciente.getTelefone());
+        if (atualizaPacienteDTO.getEndereco() != null) {
+            enderecoService.atualizar(atualizaPacienteDTO.getEndereco());
+        }
+        paciente.setNome(atualizaPacienteDTO.getNome() != null ? atualizaPacienteDTO.getNome() : paciente.getNome());
+        paciente.setTelefone(atualizaPacienteDTO.getTelefone() != null ? atualizaPacienteDTO.getTelefone() : paciente.getTelefone());
 
         pacienteRepositoy.save(paciente);
     }
 
-    public void deletar(Long id){
+    public void deletar(Long id) {
         Paciente paciente = pacienteRepositoy.findById(id).get();
         paciente.setAtivo(false);
         pacienteRepositoy.save(paciente);
     }
 
-    public Page<ListaPacienteDTO> listar(Pageable paginacao){
+    public Page<ListaPacienteDTO> listar(Pageable paginacao) {
         return pacienteRepositoy.findAllByAtivoTrue(paginacao).map(ListaPacienteDTO::new);
     }
 
-    private Paciente build(CadastraPacienteDTO cadastraPacienteDTO){
+    private Paciente build(CadastraPacienteDTO cadastraPacienteDTO) {
         return Paciente.builder()
                 .nome(cadastraPacienteDTO.getNome())
                 .email(cadastraPacienteDTO.getEmail())
