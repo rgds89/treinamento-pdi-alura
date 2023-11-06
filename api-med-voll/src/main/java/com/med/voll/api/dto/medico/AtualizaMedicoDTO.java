@@ -1,6 +1,8 @@
 package com.med.voll.api.dto.medico;
 
+import com.med.voll.api.dto.endereco.AtualizaEnderecoDTO;
 import com.med.voll.api.dto.telefone.AtualizaTelefoneDTO;
+import com.med.voll.api.model.endereco.Endereco;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -13,7 +15,6 @@ public class AtualizaMedicoDTO {
     private Long id;
     private String nome;
     private String email;
-    @Valid
-    private AtualizaTelefoneDTO telefone;
+    private AtualizaEnderecoDTO endereco;
 
 }

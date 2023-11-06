@@ -1,6 +1,7 @@
 package com.med.voll.api.service.medico;
 
 
+import com.med.voll.api.dto.medico.DetalhamentoMedicoDTO;
 import com.med.voll.api.dto.telefone.AtualizaTelefoneDTO;
 import com.med.voll.api.dto.medico.AtualizaMedicoDTO;
 import com.med.voll.api.dto.medico.CadastraMedicoDTO;
@@ -23,27 +24,35 @@ public class MedicoService {
     private final EnderecoService enderecoService;
     private final TelefoneService telefoneService;
 
-    public void cadastrar(CadastraMedicoDTO cadastraMedicoDTO) {
+    public DetalhamentoMedicoDTO cadastrar(CadastraMedicoDTO cadastraMedicoDTO) {
         Medico medico = build(cadastraMedicoDTO);
         medicoRepository.save(medico);
         telefoneService.cadastrar(cadastraMedicoDTO.getTelefones(), medico);
-    }
-
-    public AtualizaMedicoDTO atualizar(AtualizaMedicoDTO atualizaMedicoDTO) {
-        Telefone telefone = telefoneService.atualizar(atualizaMedicoDTO.getTelefone());
-        Medico medico = medicoRepository.findById(atualizaMedicoDTO.getId()).get();
-        medico.setNome(atualizaMedicoDTO.getNome() != null ? atualizaMedicoDTO.getNome() : medico.getNome());
-        medico.setEmail(atualizaMedicoDTO.getEmail() != null ? atualizaMedicoDTO.getEmail() : medico.getEmail());
-        medicoRepository.save(medico);
-        return AtualizaMedicoDTO.builder()
+        return DetalhamentoMedicoDTO.builder()
                 .id(medico.getId())
                 .nome(medico.getNome())
                 .email(medico.getEmail())
-                .telefone(
-                        AtualizaTelefoneDTO.builder()
-                                .ddd(telefone.getDdd())
-                                .numero(telefone.getNumero())
-                                .build())
+                .crm(medico.getCrm())
+                .especialidade(medico.getEspecialidade())
+                .endereco(medico.getEndereco())
+                .build();
+    }
+
+    public DetalhamentoMedicoDTO atualizar(AtualizaMedicoDTO atualizaMedicoDTO) {
+        Medico medico = medicoRepository.findById(atualizaMedicoDTO.getId()).get();
+        if(atualizaMedicoDTO.getEndereco() != null){
+            enderecoService.atualizar(atualizaMedicoDTO.getEndereco());
+        }
+        medico.setNome(atualizaMedicoDTO.getNome() != null ? atualizaMedicoDTO.getNome() : medico.getNome());
+        medico.setEmail(atualizaMedicoDTO.getEmail() != null ? atualizaMedicoDTO.getEmail() : medico.getEmail());
+        medicoRepository.save(medico);
+        return DetalhamentoMedicoDTO.builder()
+                .id(medico.getId())
+                .nome(medico.getNome())
+                .email(medico.getEmail())
+                .crm(medico.getCrm())
+                .especialidade(medico.getEspecialidade())
+                .endereco(medico.getEndereco())
                 .build();
     }
 
@@ -55,6 +64,18 @@ public class MedicoService {
 
     public Page<ListaMedicoDTO> findMedicos(Pageable paginacao) {
         return medicoRepository.findAllByAtivoTrue(paginacao).map(ListaMedicoDTO::new);
+    }
+
+    public DetalhamentoMedicoDTO findMedico(Long id){
+        Medico medico = medicoRepository.findById(id).get();
+        return DetalhamentoMedicoDTO.builder()
+                .id(medico.getId())
+                .nome(medico.getNome())
+                .email(medico.getEmail())
+                .crm(medico.getCrm())
+                .especialidade(medico.getEspecialidade())
+                .endereco(medico.getEndereco())
+                .build();
     }
 
     private Medico build(CadastraMedicoDTO cadastraMedicoDTO) {

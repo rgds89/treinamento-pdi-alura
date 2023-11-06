@@ -1,5 +1,7 @@
 server:
   port: 8081
+  error:
+    include-stacktrace: never
 
 spring:
   datasource:
@@ -7,3 +9,4 @@ spring:
     url: jdbc:mysql://localhost:3306/vollmed_api
     username: root
     password: Timaorgs@1910
+

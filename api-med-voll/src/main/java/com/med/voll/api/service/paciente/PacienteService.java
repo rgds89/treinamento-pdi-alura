@@ -2,6 +2,7 @@ package com.med.voll.api.service.paciente;
 
 import com.med.voll.api.dto.paciente.AtualizaPacienteDTO;
 import com.med.voll.api.dto.paciente.CadastraPacienteDTO;
+import com.med.voll.api.dto.paciente.DetalhamentoPacienteDTO;
 import com.med.voll.api.dto.paciente.ListaPacienteDTO;
 import com.med.voll.api.model.paciente.Paciente;
 import com.med.voll.api.repository.paciente.PacienteRepositoy;
@@ -17,19 +18,29 @@ public class PacienteService {
     private final PacienteRepositoy pacienteRepositoy;
     private final EnderecoService enderecoService;
 
-    public void cadastrar(CadastraPacienteDTO cadastraPacienteDTO) {
-        pacienteRepositoy.save(build(cadastraPacienteDTO));
+    public DetalhamentoPacienteDTO cadastrar(CadastraPacienteDTO cadastraPacienteDTO) {
+        Paciente paciente = pacienteRepositoy.save(build(cadastraPacienteDTO));
+        return DetalhamentoPacienteDTO.builder()
+                .id(paciente.getId())
+                .nome(paciente.getNome())
+                .email(paciente.getEmail())
+                .endereco(paciente.getEndereco())
+                .build();
     }
 
-    public void atualizar(AtualizaPacienteDTO atualizaPacienteDTO) {
+    public DetalhamentoPacienteDTO atualizar(AtualizaPacienteDTO atualizaPacienteDTO) {
         Paciente paciente = pacienteRepositoy.findById(atualizaPacienteDTO.getId()).get();
         if (atualizaPacienteDTO.getEndereco() != null) {
-            enderecoService.atualizar(atualizaPacienteDTO.getEndereco());
-        }
+            enderecoService.atualizar(atualizaPacienteDTO.getEndereco());        }
         paciente.setNome(atualizaPacienteDTO.getNome() != null ? atualizaPacienteDTO.getNome() : paciente.getNome());
         paciente.setTelefone(atualizaPacienteDTO.getTelefone() != null ? atualizaPacienteDTO.getTelefone() : paciente.getTelefone());
-
         pacienteRepositoy.save(paciente);
+        return DetalhamentoPacienteDTO.builder()
+                .id(paciente.getId())
+                .nome(paciente.getNome())
+                .email(paciente.getEmail())
+                .endereco(paciente.getEndereco())
+                .build();
     }
 
     public void deletar(Long id) {
@@ -40,6 +51,16 @@ public class PacienteService {
 
     public Page<ListaPacienteDTO> listar(Pageable paginacao) {
         return pacienteRepositoy.findAllByAtivoTrue(paginacao).map(ListaPacienteDTO::new);
+    }
+
+    public DetalhamentoPacienteDTO findPaciente(Long id){
+        Paciente paciente = pacienteRepositoy.findById(id).get();
+        return DetalhamentoPacienteDTO.builder()
+                .id(paciente.getId())
+                .nome(paciente.getNome())
+                .email(paciente.getEmail())
+                .endereco(paciente.getEndereco())
+                .build();
     }
 
     private Paciente build(CadastraPacienteDTO cadastraPacienteDTO) {
