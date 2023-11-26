@@ -9,4 +9,9 @@ spring:
     url: jdbc:mysql://localhost:3306/vollmed_api
     username: root
     password: Timaorgs@1910
+    
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:12345678}
 
