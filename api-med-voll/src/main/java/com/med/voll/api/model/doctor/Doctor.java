@@ -26,6 +26,7 @@ public class Doctor implements Serializable {
     private String email;
     private Long  crm;
     @Enumerated(EnumType.STRING)
+    @Column(name = "especialidade")
     private Specialties specialties;
     @OneToOne
     @JoinColumn(name="id_endereco")
