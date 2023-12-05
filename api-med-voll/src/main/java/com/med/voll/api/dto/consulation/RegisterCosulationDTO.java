@@ -1,5 +1,6 @@
 package com.med.voll.api.dto.consulation;
 
+import com.med.voll.api.enums.Specialties;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -19,4 +20,6 @@ public class RegisterCosulationDTO {
     @NotNull
     @Future
     private LocalDateTime data;
+
+    private Specialties especialidade;
 }
