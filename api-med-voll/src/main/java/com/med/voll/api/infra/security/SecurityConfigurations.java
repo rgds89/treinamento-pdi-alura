@@ -28,8 +28,8 @@ public class SecurityConfigurations {
 		return httpSecurity.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/auth").permitAll()
-						.anyRequest().authenticated().and()
-						.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class))
+						.anyRequest().authenticated())
+				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 

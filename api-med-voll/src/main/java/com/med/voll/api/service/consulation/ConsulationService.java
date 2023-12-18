@@ -1,5 +1,6 @@
 package com.med.voll.api.service.consulation;
 
+import com.med.voll.api.business.validation.ValidateScheduleConsulation;
 import com.med.voll.api.dto.consulation.RegisterCosulationDTO;
 import com.med.voll.api.enums.Specialties;
 import com.med.voll.api.model.consulation.Consulation;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,10 @@ public class ConsulationService {
     private DoctorRepository doctorRepository;
     private PatientRepositoy patientRepository;
 
+    private final List<ValidateScheduleConsulation> validateScheduleConsulationList;
+
     public void createConsulation(RegisterCosulationDTO registerCosulationDTO) {
+        validateScheduleConsulationList.forEach(validateScheduleConsulation -> validateScheduleConsulation.validate(registerCosulationDTO));
         Doctor doctor = getDoctor(registerCosulationDTO.getIdMedico(), registerCosulationDTO.getEspecialidade(), registerCosulationDTO.getData());
         Patient patient = getPatient(registerCosulationDTO.getIdPaciente());
 

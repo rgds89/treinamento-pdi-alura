@@ -18,7 +18,23 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     @Query("""
             SELECT d FROM Doctor d
-            WHERE d.ativo= true AND d.especialidade = :especialidade
+            WHERE d.ativo= true AND d.id = :id
+            """)
+    boolean isDoctorActive(Long id);
+
+    @Query("""
+            SELECT d FROM Doctor d
+            WHERE d.ativo= true AND d.id = :id
+            AND d.id NOT IN (
+                SELECT c.doctor.id FROM Consulation c
+                WHERE c.data = :data
+            )
+            """)
+    boolean isDoctorAvailable(Long id, LocalDateTime data);
+
+    @Query("""
+            SELECT d FROM Doctor d
+            WHERE d.ativo= true AND d.specialties = :specialties
             AND d.id NOT IN (
                 SELECT c.doctor.id FROM Consulation c
                 WHERE c.data = :data
@@ -26,5 +42,5 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             order by rand()
             limit 1
             """)
-    Optional<Doctor> findByEspecialidade(Specialties especialidade, LocalDateTime data);
+    Optional<Doctor> findByEspecialidade(Specialties specialties, LocalDateTime data);
 }
