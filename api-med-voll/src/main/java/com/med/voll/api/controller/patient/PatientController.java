@@ -5,6 +5,7 @@ import com.med.voll.api.dto.patient.RegisterPatientDTO;
 import com.med.voll.api.dto.patient.DetailPatientDTO;
 import com.med.voll.api.dto.patient.ListPatientDTO;
 import com.med.voll.api.service.patient.PatientService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/pacientes")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearer-key")
 public class PatientController {
     private final PatientService patientService;
 
