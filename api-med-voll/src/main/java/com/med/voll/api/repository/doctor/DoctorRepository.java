@@ -42,5 +42,5 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             order by rand()
             limit 1
             """)
-    Optional<Doctor> findByEspecialidade(Specialties specialties, LocalDateTime data);
+    Optional<Doctor> findBySpecialtiesAndData(Specialties specialties, LocalDateTime data);
 }

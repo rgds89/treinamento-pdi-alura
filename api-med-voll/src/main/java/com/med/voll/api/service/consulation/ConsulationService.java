@@ -37,7 +37,7 @@ public class ConsulationService {
         if (id != null) {
             return doctorRepository.findById(id).orElseThrow(() -> new ValidationConsulationException("Médico não encontrado"));
         }else if (especialidade !=  null){
-            return doctorRepository.findByEspecialidade(especialidade, data).orElseThrow(() -> new ValidationConsulationException("Médico não encontrado"));
+            return doctorRepository.findBySpecialtiesAndData(especialidade, data).orElseThrow(() -> new ValidationConsulationException("Médico não encontrado"));
         }else{
             throw new ValidationConsulationException("Especialidade ou Médico não informado");
         }
