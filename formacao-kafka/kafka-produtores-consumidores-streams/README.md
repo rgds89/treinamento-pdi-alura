@@ -1,0 +1,1 @@
+# Treinamento do kafka sobre produtores, consumidores e streams
