@@ -1,13 +1,11 @@
 package br.com.store.wholesale.ecommerce.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
-
-import java.util.HashMap;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,7 +20,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public KafkaTemplate<?, ?> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
