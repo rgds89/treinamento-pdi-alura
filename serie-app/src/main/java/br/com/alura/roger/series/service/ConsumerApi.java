@@ -1,6 +1,5 @@
 package br.com.alura.roger.series.service;
 
-import br.com.alura.roger.series.model.record.SerieData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +16,15 @@ public class ConsumerApi {
     @Autowired
     private ConvertData convertData;
 
-    public SerieData getData(String url){
+    public <T> T getData(String url, Class<T> clazz){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).build();
         try{
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             json = response.body();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        SerieData serieData = convertData.getData(json, SerieData.class);
-        return serieData;
+        return convertData.getData(json, clazz);
     }
 }
