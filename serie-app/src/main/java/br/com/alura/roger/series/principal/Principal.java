@@ -1,35 +1,33 @@
 package br.com.alura.roger.series.principal;
 
-import br.com.alura.roger.series.model.record.EpisodeData;
-import br.com.alura.roger.series.model.record.SeasonData;
-import br.com.alura.roger.series.model.record.SerieData;
-import br.com.alura.roger.series.service.ConsumerApi;
+import br.com.alura.roger.series.business.EpisodeBusiness;
+import br.com.alura.roger.series.business.SeasonBusiness;
+import br.com.alura.roger.series.business.SerieBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 @Component
 public class Principal {
     private Scanner scanner = new Scanner(System.in);
-    private static final String URL = "http://www.omdbapi.com/?t=";
-    private static final String API_KEY = "&apikey=21568e41";
 
     @Autowired
-    private ConsumerApi consumerApi;
+    private SerieBusiness serie;
+    @Autowired
+    private SeasonBusiness season;
+    @Autowired
+    private EpisodeBusiness episode;
+
 
     public void displayMenu() {
         System.out.println("Informe a série que deseja buscar: ");
         var nameSeries = scanner.nextLine();
-        printSeries(nameSeries);
+        serie.printSeries(nameSeries);
 
         System.out.println("Deseja ver as temporadas? (S/N)");
         if (scanner.nextLine().equalsIgnoreCase("S")) {
-            printSeasons(nameSeries);
+            season.printSeasons(nameSeries);
         }
 
         System.out.println("Deseja ver os episódios? (S/N)");
@@ -37,70 +35,20 @@ public class Principal {
             System.out.println("Informe a temporada: ");
             var season = scanner.nextInt();
             System.out.println("Informe o episódio: ");
-            var episode = scanner.nextInt();
-            printEpisode(nameSeries, season, episode);
+            var episodeNumber = scanner.nextInt();
+            episode.printEpisode(nameSeries, season, episodeNumber);
         }
 
         System.out.println("Deseja imprimir o titulo de cada episódio? (S/N)");
-        if(scanner.nextLine().equalsIgnoreCase("S")) {
-            printAllEpisodesTitle(nameSeries);
+        if (scanner.nextLine().equalsIgnoreCase("S")) {
+            episode.printAllEpisodesTitle(nameSeries);
         }
 
         System.out.println("Deseja imprimir os 5 episódios mais bem avaliados? (S/N)");
-        if(scanner.nextLine().equalsIgnoreCase("S")) {
-            printTopFiveEpisodes(nameSeries);
+        if (scanner.nextLine().equalsIgnoreCase("S")) {
+            episode.printTopFiveEpisodes(nameSeries);
         }
     }
 
-    private void printTopFiveEpisodes(String nameSeries) {
-        List<SeasonData> seasons = new ArrayList<>();
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
-
-        for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
-            seasons.add(seasonData);
-        }
-
-        List<EpisodeData> episodes= seasons.stream().flatMap(t -> t.episodes().stream()).toList();
-        episodes.stream()
-                .filter(e -> !e.imdbRating().equals("N/A"))
-                .sorted(Comparator.comparing(EpisodeData::imdbRating).reversed())
-                .limit(5)
-                .forEach(System.out::println);
-    }
-
-    private void printAllEpisodesTitle(String nameSeries) {
-        List<SeasonData> seasons = new ArrayList<>();
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
-
-        for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
-            seasons.add(seasonData);
-        }
-
-        seasons.forEach(s -> s.episodes().forEach(e -> System.out.println(e.title())));
-    }
-
-    private void printSeries(String nameSeries) {
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
-        System.out.println(serieData);
-    }
-
-    private void printSeasons(String nameSeries) {
-        List<SeasonData> seasons = new ArrayList<>();
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
-
-        for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
-            seasons.add(seasonData);
-        }
-
-        seasons.forEach(System.out::println);
-    }
-
-    private void printEpisode(String nameSeries, int season, int episode) {
-        var episodeData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + season + "&episode=" + episode + API_KEY, EpisodeData.class);
-        System.out.println(episodeData);
-    }
 
 }
