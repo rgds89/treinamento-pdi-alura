@@ -1,6 +1,7 @@
 package br.com.alura.roger.series.business;
 
 import br.com.alura.roger.series.business.util.Endpoint;
+import br.com.alura.roger.series.model.Episode;
 import br.com.alura.roger.series.model.record.EpisodeData;
 import br.com.alura.roger.series.model.record.SeasonData;
 import br.com.alura.roger.series.model.record.SerieData;
@@ -46,10 +47,13 @@ public class EpisodeBusiness {
             seasons.add(seasonData);
         }
 
-        List<EpisodeData> episodes= seasons.stream().flatMap(t -> t.episodes().stream()).toList();
+        List<Episode> episodes = seasons.stream()
+                .flatMap(s -> s.episodes().stream()
+                        .map(e -> new Episode(s.season(), e))
+                ).toList();
+
         episodes.stream()
-                .filter(e -> !e.imdbRating().equals("N/A"))
-                .sorted(Comparator.comparing(EpisodeData::imdbRating).reversed())
+                .sorted(Comparator.comparing(Episode::getImdbRating).reversed())
                 .limit(5)
                 .forEach(System.out::println);
     }
