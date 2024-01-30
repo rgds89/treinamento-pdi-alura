@@ -38,7 +38,25 @@ public class Principal {
             var episode = scanner.nextInt();
             printEpisode(nameSeries, season, episode);
         }
+
+        System.out.println("Deseja imprimir o titulo de cada episódio? (S/N)");
+        if(scanner.nextLine().equalsIgnoreCase("S")) {
+            printAllEpisodesTitle(nameSeries);
+        }
     }
+
+    private void printAllEpisodesTitle(String nameSeries) {
+        List<SeasonData> seasons = new ArrayList<>();
+        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
+
+        for (int i = 1; i <= serieData.totalSeasons(); i++) {
+            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
+            seasons.add(seasonData);
+        }
+
+        seasons.forEach(s -> s.episodes().forEach(e -> System.out.println(e.title())));
+    }
+
     private void printSeries(String nameSeries) {
         var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
         System.out.println(serieData);
