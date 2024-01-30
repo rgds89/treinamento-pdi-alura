@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class Principal {
@@ -43,6 +45,28 @@ public class Principal {
         if(scanner.nextLine().equalsIgnoreCase("S")) {
             printAllEpisodesTitle(nameSeries);
         }
+
+        System.out.println("Deseja imprimir os 5 episódios mais bem avaliados? (S/N)");
+        if(scanner.nextLine().equalsIgnoreCase("S")) {
+            printTopFiveEpisodes(nameSeries);
+        }
+    }
+
+    private void printTopFiveEpisodes(String nameSeries) {
+        List<SeasonData> seasons = new ArrayList<>();
+        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
+
+        for (int i = 1; i <= serieData.totalSeasons(); i++) {
+            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
+            seasons.add(seasonData);
+        }
+
+        List<EpisodeData> episodes= seasons.stream().flatMap(t -> t.episodes().stream()).toList();
+        episodes.stream()
+                .filter(e -> !e.imdbRating().equals("N/A"))
+                .sorted(Comparator.comparing(EpisodeData::imdbRating).reversed())
+                .limit(5)
+                .forEach(System.out::println);
     }
 
     private void printAllEpisodesTitle(String nameSeries) {
