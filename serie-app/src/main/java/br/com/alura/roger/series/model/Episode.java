@@ -1,11 +1,13 @@
 package br.com.alura.roger.series.model;
 
 import br.com.alura.roger.series.model.record.EpisodeData;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 @Data
 @ToString
@@ -25,7 +27,19 @@ public class Episode {
         } catch (NumberFormatException e) {
             this.imdbRating = 0.0;
         }
-
-        this.released = LocalDate.parse(episodeData.released());
+        try {
+            this.released = LocalDate.parse(episodeData.released());
+        } catch (DateTimeParseException e) {
+            if (episodeData.released().equals("N/A") || episodeData.released().equals("null")) {
+                this.released = null;
+            } else {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", java.util.Locale.ENGLISH);
+                    this.released = sdf.parse(episodeData.released()).toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                } catch (ParseException e2) {
+                    this.released = null;
+                }
+            }
+        }
     }
 }
