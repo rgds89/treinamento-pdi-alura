@@ -6,6 +6,8 @@ import br.com.alura.roger.series.business.SerieBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Scanner;
 
 @Component
@@ -42,11 +44,21 @@ public class Principal {
         System.out.println("Deseja imprimir o titulo de cada episódio? (S/N)");
         if (scanner.nextLine().equalsIgnoreCase("S")) {
             episode.printAllEpisodesTitle(nameSeries);
+            scanner.nextLine();
         }
 
         System.out.println("Deseja imprimir os 5 episódios mais bem avaliados? (S/N)");
         if (scanner.nextLine().equalsIgnoreCase("S")) {
             episode.printTopFiveEpisodes(nameSeries);
+            scanner.nextLine();
+        }
+
+        System.out.println("Deseja listar os episódios a partir de determinado ano? (S/N)");
+        if (scanner.nextLine().equalsIgnoreCase("S")) {
+            System.out.println("Informe o ano: ");
+            var year = scanner.nextInt();
+            LocalDate date = LocalDate.of(year, 1, 1);
+            episode.printEpisodesByYear(nameSeries, date);
         }
     }
 

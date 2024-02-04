@@ -9,6 +9,7 @@ import br.com.alura.roger.series.service.ConsumerApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,12 +18,14 @@ import java.util.List;
 public class EpisodeBusiness {
     private static final String URL = Endpoint.URL.getDescription();
     private static final String API_KEY = Endpoint.API_KEY.getDescription();
+    private static final String SEASON = Endpoint.SEASON.getDescription();
+    private static final String EPISODE = Endpoint.EPISODE.getDescription();
 
     @Autowired
     private ConsumerApi consumerApi;
 
     public void printEpisode(String nameSeries, int season, int episode) {
-        var episodeData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + season + "&episode=" + episode + API_KEY, EpisodeData.class);
+        var episodeData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + season + EPISODE + episode + API_KEY, EpisodeData.class);
         System.out.println(episodeData);
     }
 
@@ -31,7 +34,7 @@ public class EpisodeBusiness {
         var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
 
         for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
+            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + i + API_KEY, SeasonData.class);
             seasons.add(seasonData);
         }
 
@@ -43,7 +46,7 @@ public class EpisodeBusiness {
         var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
 
         for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + "&season=" + i + API_KEY, SeasonData.class);
+            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + i + API_KEY, SeasonData.class);
             seasons.add(seasonData);
         }
 
@@ -55,6 +58,26 @@ public class EpisodeBusiness {
         episodes.stream()
                 .sorted(Comparator.comparing(Episode::getImdbRating).reversed())
                 .limit(5)
+                .forEach(System.out::println);
+    }
+
+    public void printEpisodesByYear(String nameSeries, LocalDate date) {
+        List<SeasonData> seasons = new ArrayList<>();
+        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
+
+        for (int i = 1; i <= serieData.totalSeasons(); i++) {
+            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + i + API_KEY, SeasonData.class);
+            seasons.add(seasonData);
+        }
+
+        List<Episode> episodes = seasons.stream()
+                .flatMap(s -> s.episodes().stream()
+                        .map(e -> new Episode(s.season(), e))
+                ).toList();
+
+        episodes.stream()
+                .sorted(Comparator.comparing(Episode::getReleased))
+                .filter(e -> e.getReleased().isAfter(date))
                 .forEach(System.out::println);
     }
 }
