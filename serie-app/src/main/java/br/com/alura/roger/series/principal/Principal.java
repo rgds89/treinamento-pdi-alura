@@ -60,6 +60,12 @@ public class Principal {
             LocalDate date = LocalDate.of(year, 1, 1);
             episode.printEpisodesByYear(nameSeries, date);
         }
+
+        System.out.println("Deseja listar as melhores temporadas? (S/N)");
+        if (scanner.nextLine().equalsIgnoreCase("S")) {
+            season.prinBestSeasons(nameSeries);
+            scanner.nextLine();
+        }
     }
 
 
