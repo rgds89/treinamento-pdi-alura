@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.OptionalDouble;
 
 @Data
 @ToString
@@ -22,11 +23,7 @@ public class Episode {
         this.season = season;
         this.title = episodeData.title();
         this.episode = episodeData.episode();
-        try {
-            this.imdbRating = Double.valueOf(episodeData.imdbRating());
-        } catch (NumberFormatException e) {
-            this.imdbRating = 0.0;
-        }
+        this.imdbRating = OptionalDouble.of(Double.valueOf(episodeData.imdbRating())).orElse(0.0);
         try {
             this.released = LocalDate.parse(episodeData.released());
         } catch (DateTimeParseException e) {

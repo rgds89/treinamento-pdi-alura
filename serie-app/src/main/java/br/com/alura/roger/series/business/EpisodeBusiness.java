@@ -1,12 +1,12 @@
 package br.com.alura.roger.series.business;
 
-import br.com.alura.roger.series.business.util.Endpoint;
 import br.com.alura.roger.series.model.Episode;
 import br.com.alura.roger.series.model.record.EpisodeData;
 import br.com.alura.roger.series.model.record.SeasonData;
 import br.com.alura.roger.series.model.record.SerieData;
 import br.com.alura.roger.series.service.ConsumerApi;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,25 +16,29 @@ import java.util.List;
 
 @Component
 public class EpisodeBusiness {
-    private static final String URL = Endpoint.URL.getDescription();
-    private static final String API_KEY = Endpoint.API_KEY.getDescription();
-    private static final String SEASON = Endpoint.SEASON.getDescription();
-    private static final String EPISODE = Endpoint.EPISODE.getDescription();
+    @Value("${series.url}")
+    private String url;
+    @Value("${series.apiKey}")
+    private String apiKey;
+//    @Value("${series.season}")
+    private String season = "&season=";
+//    @Value("${series.episode}")
+    private String episode = "&episode=";
 
     @Autowired
     private ConsumerApi consumerApi;
 
     public void printEpisode(String nameSeries, int season, int episode) {
-        var episodeData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + season + EPISODE + episode + API_KEY, EpisodeData.class);
+        var episodeData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + this.season + season + this.episode + episode + apiKey, EpisodeData.class);
         System.out.println(episodeData);
     }
 
     public void printAllEpisodesTitle(String nameSeries) {
         List<SeasonData> seasons = new ArrayList<>();
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
+        var serieData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + apiKey, SerieData.class);
 
         for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + i + API_KEY, SeasonData.class);
+            var seasonData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + season + i + apiKey, SeasonData.class);
             seasons.add(seasonData);
         }
 
@@ -43,10 +47,10 @@ public class EpisodeBusiness {
 
     public void printTopFiveEpisodes(String nameSeries) {
         List<SeasonData> seasons = new ArrayList<>();
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
+        var serieData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + apiKey, SerieData.class);
 
         for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + i + API_KEY, SeasonData.class);
+            var seasonData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + season + i + apiKey, SeasonData.class);
             seasons.add(seasonData);
         }
 
@@ -63,10 +67,10 @@ public class EpisodeBusiness {
 
     public void printEpisodesByYear(String nameSeries, LocalDate date) {
         List<SeasonData> seasons = new ArrayList<>();
-        var serieData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + API_KEY, SerieData.class);
+        var serieData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + apiKey, SerieData.class);
 
         for (int i = 1; i <= serieData.totalSeasons(); i++) {
-            var seasonData = consumerApi.getData(URL + nameSeries.replace(" ", "+") + SEASON + i + API_KEY, SeasonData.class);
+            var seasonData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + season + i + apiKey, SeasonData.class);
             seasons.add(seasonData);
         }
 

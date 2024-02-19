@@ -1,2 +1,5 @@
 server:
     port: 8082
+series:
+    url: "http://www.omdbapi.com"
+    apiKey: "21568e41"
