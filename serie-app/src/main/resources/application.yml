@@ -1,5 +1,18 @@
 server:
     port: 8082
 series:
-    url: "http://www.omdbapi.com"
-    apiKey: "21568e41"
+    url: ${API_URL}}
+    apiKey: ${API_KEY}
+spring:
+    datasource:
+      url: jdbc:postgresql://${DB_HOST_POSTGRES}/${DB_NAME}
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+    jpa:
+        properties:
+          hibernate:
+              dialect: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+          ddl-auto: update
+        show-sql: false

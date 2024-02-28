@@ -1,7 +1,9 @@
 package br.com.alura.roger.series.model;
 
 import br.com.alura.roger.series.model.record.EpisodeData;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.text.ParseException;
@@ -12,14 +14,21 @@ import java.util.OptionalDouble;
 
 @Data
 @ToString
+@NoArgsConstructor
+@Entity
+@Table(name = "episodes")
 public class Episode {
-    private Integer season;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String title;
     private Integer episode;
     private Double imdbRating;
     private LocalDate released;
+    @ManyToOne
+    private Season season;
 
-    public Episode(Integer season, EpisodeData episodeData) {
+    public Episode(Season season, EpisodeData episodeData) {
         this.season = season;
         this.title = episodeData.title();
         this.episode = episodeData.episode();

@@ -56,7 +56,7 @@ public class EpisodeBusiness {
 
         List<Episode> episodes = seasons.stream()
                 .flatMap(s -> s.episodes().stream()
-                        .map(e -> new Episode(s.season(), e))
+                        .map(e -> new Episode(null, e))
                 ).toList();
 
         episodes.stream()
@@ -76,7 +76,7 @@ public class EpisodeBusiness {
 
         List<Episode> episodes = seasons.stream()
                 .flatMap(s -> s.episodes().stream()
-                        .map(e -> new Episode(s.season(), e))
+                        .map(e -> new Episode(null, e))
                 ).toList();
 
         episodes.stream()

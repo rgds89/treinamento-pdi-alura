@@ -7,19 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppSeriesApplication implements CommandLineRunner {
-	@Autowired
-	private Principal principal;
+public class AppSeriesApplication {
+    @Autowired
+    private Principal principal;
 
-	public static void main(String[] args) {
-		SpringApplication.run(AppSeriesApplication.class, args);
-	}
-
-
-
-	@Override
-	public void run(String... args) throws Exception {
-		principal.displayMenu();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AppSeriesApplication.class, args);
+    }
 
 }

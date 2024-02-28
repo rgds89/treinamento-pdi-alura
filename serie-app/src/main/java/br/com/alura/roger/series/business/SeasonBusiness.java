@@ -49,13 +49,13 @@ public class SeasonBusiness {
 
         List<Episode> episodes = seasonsData.stream()
                 .flatMap(s -> s.episodes().stream()
-                        .map(e -> new Episode(s.season(), e))
+                        .map(e -> new Episode(null, e))
                 ).toList();
 
         var imdbRatingSeason = episodes.stream().collect(Collectors.groupingBy(Episode::getSeason, Collectors.averagingDouble(Episode::getImdbRating)));
 
         List<Season> seasons = seasonsData.stream()
-                .map(s -> new Season(s.season(), s.totalSeasons(), s.title(), episodes,
+                .map(s -> new Season(s.season(), s.totalSeasons(), s.title(),
                         imdbRatingSeason.get(s.season())))
                 .toList();
 
