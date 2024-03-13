@@ -24,11 +24,11 @@ public class Principal {
     public void displayMenu() {
         System.out.println("Informe a série que deseja buscar: ");
         var nameSeries = scanner.nextLine();
-        serie.printSeries(nameSeries);
+//        serie.printSeries(nameSeries);
 
         System.out.println("Deseja ver as temporadas? (S/N)");
         if (scanner.nextLine().equalsIgnoreCase("S")) {
-            season.printSeasons(nameSeries);
+//            season.getSeasonsApi(nameSeries);
         }
 
         System.out.println("Deseja ver os episódios? (S/N)");
@@ -62,7 +62,7 @@ public class Principal {
 
         System.out.println("Deseja listar as melhores temporadas? (S/N)");
         if (scanner.nextLine().equalsIgnoreCase("S")) {
-            season.prinBestSeasons(nameSeries);
+            season.listBestSeasons(nameSeries);
             scanner.nextLine();
         }
     }

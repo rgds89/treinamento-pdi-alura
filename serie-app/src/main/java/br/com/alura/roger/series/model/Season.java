@@ -23,11 +23,12 @@ public class Season {
     @ManyToOne
     private Serie serie;
 
-    public Season(Integer season, Integer totalSeasons, String title, Double imdbRating) {
+    public Season(Integer season, Integer totalSeasons, String title, Double imdbRating, Serie serie) {
         this.season = season;
         this.totalSeasons = totalSeasons;
         this.title = title;
         this.imdbRating = imdbRating;
+        this.serie = serie;
     }
 
     @Override
