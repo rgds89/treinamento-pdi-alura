@@ -36,8 +36,8 @@ public class SeasonBusiness {
         List<SeasonData> seasonsApi = getSeasonsApi(serieData.title(), serieData.totalSeasons());
         List<SeasonData> seasons = new ArrayList<>();
         seasonsApi.forEach(s -> {
-            if (!seasonRepository.existsBySeason(s.season())) {
-                Serie serie = serieRepository.findByTitle(serieData.title());
+            Serie serie = serieRepository.findByTitle(serieData.title());
+            if (!seasonRepository.existsBySeasonAndSerie(s.season(), serie)) {
                 Season season = buildSeason(s, serie);
                 seasonRepository.save(season);
                 seasons.add(buildSeasonData(season));
@@ -46,27 +46,6 @@ public class SeasonBusiness {
                 seasons.add(buildSeasonData(season));
             }
         });
-        return seasons;
-    }
-
-    private SeasonData buildSeasonData(Season season) {
-        return SeasonData.builder()
-                .season(season.getSeason())
-                .totalSeasons(season.getTotalSeasons())
-                .title(season.getTitle())
-                .build();
-    }
-
-    private Season buildSeason(SeasonData seasonData, Serie serie) {
-        return new Season(seasonData.season(), seasonData.totalSeasons(), seasonData.title(), null, serie);
-    }
-
-    private List<SeasonData> getSeasonsApi(String nameSeries, Integer totalSeasons) {
-        List<SeasonData> seasons = new ArrayList<>();
-        for (int i = 1; i <= totalSeasons; i++) {
-            var seasonData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + "&season=" + i + apiKey, SeasonData.class);
-            seasons.add(seasonData);
-        }
         return seasons;
     }
 
@@ -90,10 +69,46 @@ public class SeasonBusiness {
                     });
 
         } catch (Exception e) {
-            throw new RuntimeException("Serie not found");
+            throw new RuntimeException("Não foi encontrado a série informada.");
         }
         return seasonsData;
     }
 
+    public SeasonData getSeason(String nameSeries, Integer season) {
+        Serie serie = serieRepository.findByTitle(nameSeries);
+        if (!seasonRepository.existsBySeasonAndSerie(season, serie)) {
+            SeasonData seasonData = getSeasonApi(nameSeries, season);
+            Season seasonEntity = buildSeason(seasonData, serie);
+            seasonRepository.save(seasonEntity);
+            return buildSeasonData(seasonEntity);
+        } else {
+            Season seasonEntity = seasonRepository.findBySeason(season);
+            return buildSeasonData(seasonEntity);
+        }
+    }
 
+    private SeasonData buildSeasonData(Season season) {
+        return SeasonData.builder()
+                .season(season.getSeason())
+                .totalSeasons(season.getTotalSeasons())
+                .title(season.getTitle())
+                .build();
+    }
+
+    private Season buildSeason(SeasonData seasonData, Serie serie) {
+        return new Season(seasonData.season(), seasonData.totalSeasons(), seasonData.title(), null, serie);
+    }
+
+    private List<SeasonData> getSeasonsApi(String nameSeries, Integer totalSeasons) {
+        List<SeasonData> seasons = new ArrayList<>();
+        for (int i = 1; i <= totalSeasons; i++) {
+            var seasonData = consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + "&season=" + i + apiKey, SeasonData.class);
+            seasons.add(seasonData);
+        }
+        return seasons;
+    }
+
+    private SeasonData getSeasonApi(String nameSeries, Integer season) {
+        return consumerApi.getData(url + "/?t=" + nameSeries.replace(" ", "+") + "&season=" + season + apiKey, SeasonData.class);
+    }
 }
