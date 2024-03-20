@@ -21,6 +21,14 @@ public class AbrigoService {
         String uri = "http://localhost:8080/abrigos";
         String responseBody = client.dispararRequisicaoGet(uri).body();
         List<Abrigo> abrigos = Arrays.stream(new ObjectMapper().readValue(responseBody, Abrigo[].class)).toList();
+        if (!abrigos.isEmpty()) {
+            mostarAbrigosCadastrados(abrigos);
+        } else {
+            System.out.println("Nenhum abrigo cadastrado.");
+        }
+    }
+
+    private void mostarAbrigosCadastrados(List<Abrigo> abrigos) {
         System.out.println("Abrigos cadastrados:");
         for (Abrigo abrigo : abrigos) {
             long id = abrigo.getId();
