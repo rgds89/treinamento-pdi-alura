@@ -37,7 +37,7 @@ public class AbrigoService {
         System.out.println("Digite o email do abrigo:");
         String email = new Scanner(System.in).nextLine();
 
-        Abrigo abrigo = new Abrigo(nome, telefone, email);
+        Abrigo abrigo = new Abrigo(nome, null, telefone, email);
 
         String uri = "http://localhost:8080/abrigos";
         HttpResponse<String> response = client.dispararRequisicaoPost(uri, abrigo);

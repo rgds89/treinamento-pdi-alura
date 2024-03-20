@@ -7,7 +7,16 @@ public class Abrigo {
     private String nome;
     private String endereco;
     private String telefone;
+    private String email;
     private List<Pet> pets;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public List<Pet> getPets() {
         return pets;
@@ -49,11 +58,21 @@ public class Abrigo {
         this.telefone = telefone;
     }
 
-    public Abrigo(){}
+    public Abrigo() {
+    }
 
-    public Abrigo(String nome, String endereco, String telefone) {
+    public Abrigo(String nome, String endereco, String telefone, String email) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
+        this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return """
+                "id":%s,"nome":"%s","telefone":"%s","email":"%s"
+                """.formatted(this.id, this.nome, this.telefone, this.email);
+    }
+
 }
