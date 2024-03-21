@@ -5,7 +5,7 @@ import br.com.alura.service.PetService;
 
 import java.io.IOException;
 
-public class LIstarPetCommand implements Command{
+public class ListarPetCommand implements Command{
     ClientHttpConfiguration client = new ClientHttpConfiguration();
     PetService petService = new PetService(client);
 
