@@ -6,7 +6,6 @@ import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.Pet;
-import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
@@ -15,7 +14,6 @@ import br.com.alura.adopet.api.validacao.ValidacaoSolicitacaoAdocao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -44,19 +42,14 @@ public class AdocaoService {
     }
 
     private Adocao buildAdocao(SolicitacaoAdocaoDto solicitacaoAdocaoDto, Pet pet, Tutor tutor) {
-        Adocao adocao = new Adocao();
-        adocao.setData(LocalDateTime.now());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
-        adocao.setPet(pet);
-        adocao.setTutor(tutor);
-        adocao.setMotivo(solicitacaoAdocaoDto.motivo());
+        Adocao adocao = new Adocao(tutor, pet, solicitacaoAdocaoDto.motivo());
         adocaoRepository.save(adocao);
         return adocao;
     }
 
     public void aprovar(AprovacaoAdocaoDto aprovarAdocaoDto) {
         Adocao adocao = adocaoRepository.findById(aprovarAdocaoDto.idAdocao()).orElseThrow(() -> new ValidacaoException("Adoção não encontrada!"));
-        adocao.setStatus(StatusAdocao.APROVADO);
+        adocao.aprovar();
         adocaoRepository.save(adocao);
         emailService.enviar(adocao.getTutor().getEmail(),
                 "Adoção aprovada",
@@ -68,8 +61,7 @@ public class AdocaoService {
 
     public void reprovar(ReprovacaoAdocaoDto reprovacaoAdocaoDto) {
         Adocao adocao = adocaoRepository.findById(reprovacaoAdocaoDto.idAdocao()).orElseThrow(() -> new ValidacaoException("Adoção não encontrada!"));
-        adocao.setStatus(StatusAdocao.REPROVADO);
-        adocao.setJustificativaStatus(reprovacaoAdocaoDto.justificativa());
+        adocao.reprovar(reprovacaoAdocaoDto.justificativa());
         adocaoRepository.save(adocao);
         emailService.enviar(adocao.getTutor().getEmail(),
                 "Adoção reprovada",

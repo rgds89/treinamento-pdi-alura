@@ -38,4 +38,21 @@ public class Adocao {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public Adocao(Tutor tutor, Pet pet, String motivo) {
+        this.data = LocalDateTime.now();
+        this.tutor = tutor;
+        this.pet = pet;
+        this.motivo = motivo;
+        this.status = StatusAdocao.AGUARDANDO_AVALIACAO;
+    }
+
+    public void aprovar() {
+        this.status = StatusAdocao.APROVADO;
+    }
+
+    public void reprovar(String justificativa) {
+        this.status = StatusAdocao.REPROVADO;
+        this.justificativaStatus = justificativa;
+    }
 }
