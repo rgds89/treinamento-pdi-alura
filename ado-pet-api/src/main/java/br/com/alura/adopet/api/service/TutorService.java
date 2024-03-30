@@ -29,6 +29,7 @@ public class TutorService {
     public TutorDto atualizar(AtualizarTutorDto dto) {
         Tutor tutor = tutorRepository.findById(dto.id()).orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado"));
         tutor.atualizar(dto);
+        tutorRepository.save(tutor);
         return buildTutorDto(tutor);
     }
 
