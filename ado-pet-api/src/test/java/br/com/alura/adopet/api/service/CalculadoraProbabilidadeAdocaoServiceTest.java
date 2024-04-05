@@ -4,9 +4,11 @@ import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.model.TipoPet;
 import br.com.alura.adopet.api.model.enums.ProbabilidadeAdocao;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ContextConfiguration(classes = CalculadoraProbabilidadeAdocaoService.class)
 class CalculadoraProbabilidadeAdocaoServiceTest {
     private Pet pet;
 

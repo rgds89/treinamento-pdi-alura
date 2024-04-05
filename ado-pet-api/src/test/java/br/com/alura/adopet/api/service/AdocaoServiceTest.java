@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = AdocaoService.class)
 class AdocaoServiceTest {
     @Mock
     private SolicitacaoAdocaoDto solicitacaoAdocaoDto;
