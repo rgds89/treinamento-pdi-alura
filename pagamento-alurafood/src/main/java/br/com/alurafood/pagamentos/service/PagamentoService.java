@@ -8,9 +8,9 @@ import br.com.alurafood.pagamentos.model.Pagamento;
 import br.com.alurafood.pagamentos.model.enums.Status;
 import br.com.alurafood.pagamentos.repository.PagamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +42,9 @@ public class PagamentoService {
         pagamentoRepository.deleteById(id);
     }
 
-    public List<PagamentoDto> listarPagamentos() {
-        List<Pagamento> pagamentos = pagamentoRepository.findAll();
-        return pagamentos.stream()
-                .map(this::buildPagamentoDto)
-                .toList();
+    public Page<PagamentoDto> listarPagamentos(Pageable paginacao) {
+        return pagamentoRepository.findAll(paginacao)
+                .map(this::buildPagamentoDto);
     }
 
     public PagamentoDto buscarPagamento(Long id) {
