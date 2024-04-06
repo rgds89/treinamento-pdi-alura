@@ -3,6 +3,7 @@ package br.com.alurafood.pagamentos.model;
 import br.com.alurafood.pagamentos.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
