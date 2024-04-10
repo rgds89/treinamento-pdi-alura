@@ -1,3 +1,5 @@
+server:
+  port: 0
 spring:
   application:
     name: pagamentos
@@ -6,3 +8,7 @@ spring:
     username: ${DB_USER_MYSQL}
     password: ${DB_PASSWORD_MYSQL}
     driver-class-name: com.mysql.cj.jdbc.Driver
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka/
