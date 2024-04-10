@@ -5,3 +5,4 @@ spring:
     url: jdbc:mysql://localhost/pagamento-alurafood?createDatabaseIfNotExist=true&useSSL=false
     username: ${DB_USER_MYSQL}
     password: ${DB_PASSWORD_MYSQL}
+    driver-class-name: com.mysql.cj.jdbc.Driver

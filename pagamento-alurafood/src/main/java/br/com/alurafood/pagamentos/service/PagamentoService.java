@@ -8,6 +8,7 @@ import br.com.alurafood.pagamentos.model.Pagamento;
 import br.com.alurafood.pagamentos.model.enums.Status;
 import br.com.alurafood.pagamentos.repository.PagamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PagamentoService {
     private final PagamentoRepository pagamentoRepository;
+    private final ModelMapper mapper;
 
     public PagamentoDto criarPagamento(CadastrarPagamentoDto dto) {
         Pagamento pagamento = buildPagamento(dto);
@@ -26,15 +28,7 @@ public class PagamentoService {
     public PagamentoDto atualizarPagamento(Long id, AtualizarPagamentoDto dto) {
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() -> new PagamentoException("Pagamento não encontrado"));
-        pagamento.builder()
-                .valor(dto.valor() == null ? pagamento.getValor() : dto.valor())
-                .nome(dto.nome() == null ? pagamento.getNome() : dto.nome())
-                .numero(dto.numero() == null ? pagamento.getNumero() : dto.numero())
-                .expiracao(dto.expiracao() == null ? pagamento.getExpiracao() : dto.expiracao())
-                .codigo(dto.codigo() == null ? pagamento.getCodigo() : dto.codigo())
-                .status(dto.status() == null ? pagamento.getStatus() : dto.status())
-                .build();
-        pagamentoRepository.save(pagamento);
+        pagamentoRepository.save(buildPagamentoAtualizado(pagamento, dto));
         return buildPagamentoDto(pagamento);
     }
 
@@ -78,5 +72,31 @@ public class PagamentoService {
                 .pedidoId(dto.pedidoId())
                 .formaDePagamentoId(dto.formaDePagamentoId())
                 .build();
+    }
+
+    private Pagamento buildPagamentoAtualizado(Pagamento pagamento, AtualizarPagamentoDto dto) {
+        return Pagamento.builder()
+                .id(pagamento.getId())
+                .valor(dto.valor() == null ? pagamento.getValor() : dto.valor())
+                .nome(dto.nome() == null ? pagamento.getNome() : dto.nome())
+                .numero(dto.numero() == null ? pagamento.getNumero() : dto.numero())
+                .expiracao(dto.expiracao() == null ? pagamento.getExpiracao() : dto.expiracao())
+                .codigo(dto.codigo() == null ? pagamento.getCodigo() : dto.codigo())
+                .status(dto.status() == null ? pagamento.getStatus() : dto.status())
+                .pedidoId(pagamento.getPedidoId())
+                .formaDePagamentoId(pagamento.getFormaDePagamentoId())
+                .build();
+    }
+
+    public void cancelarPagamento(Long id) {
+        Pagamento pagamento = pagamentoRepository.findById(id)
+                .orElseThrow(() -> new PagamentoException("Pagamento não encontrado"));
+        pagamento.cancelar();
+    }
+
+    public void confirmarPagamento(Long id) {
+        Pagamento pagamento = pagamentoRepository.findById(id)
+                .orElseThrow(() -> new PagamentoException("Pagamento não encontrado"));
+        pagamento.confirmar();
     }
 }

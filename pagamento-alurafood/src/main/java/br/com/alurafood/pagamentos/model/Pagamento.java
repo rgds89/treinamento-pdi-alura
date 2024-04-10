@@ -28,4 +28,12 @@ public class Pagamento {
     private Status status;
     private Long pedidoId;
     private Long formaDePagamentoId;
+
+    public void cancelar() {
+        this.status = Status.CANCELADO;
+    }
+
+    public void confirmar() {
+        this.status = Status.CONFIRMADO;
+    }
 }

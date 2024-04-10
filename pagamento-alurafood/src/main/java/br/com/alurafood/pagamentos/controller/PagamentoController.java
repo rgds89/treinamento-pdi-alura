@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +32,7 @@ public class PagamentoController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity<PagamentoDto> atualizarPagamento(@PathVariable Long id, @RequestBody @Valid AtualizarPagamentoDto dto) {
         PagamentoDto pagamentoDto = pagamentoService.atualizarPagamento(id, dto);
         return ResponseEntity.ok(pagamentoDto);
@@ -53,5 +53,19 @@ public class PagamentoController {
     public ResponseEntity<PagamentoDto> buscarPagamento(@PathVariable @NotNull Long id) {
         PagamentoDto pagamentoDto = pagamentoService.buscarPagamento(id);
         return ResponseEntity.ok(pagamentoDto);
+    }
+
+    @Transactional
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<String> cancelarPagamento(@PathVariable Long id) {
+        pagamentoService.cancelarPagamento(id);
+        return ResponseEntity.ok("Pagamento  id " + id + " cancelado com sucesso");
+    }
+
+    @Transactional
+    @PutMapping("/{id}/confirmar")
+    public ResponseEntity<String> confirmarPagamento(@PathVariable Long id) {
+        pagamentoService.confirmarPagamento(id);
+        return ResponseEntity.ok("Pagamento  id " + id + " confirmado com sucesso");
     }
 }
