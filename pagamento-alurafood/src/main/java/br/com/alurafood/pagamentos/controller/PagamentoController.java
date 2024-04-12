@@ -7,6 +7,7 @@ import br.com.alurafood.pagamentos.service.PagamentoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -67,5 +68,10 @@ public class PagamentoController {
     public ResponseEntity<String> confirmarPagamento(@PathVariable Long id) {
         pagamentoService.confirmarPagamento(id);
         return ResponseEntity.ok("Pagamento  id " + id + " confirmado com sucesso");
+    }
+
+    @GetMapping("/porta")
+    public String getPorta(@Value("${local.server.port}") String porta) {
+        return String.format("Requisição respondida pela instância executando na porta %s", porta);
     }
 }
