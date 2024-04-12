@@ -2,7 +2,7 @@ server:
   port: 0
 spring:
   application:
-    name: pedidos
+    name: pedidos-ms
   datasource:
     url: jdbc:mysql://localhost/pedido-alurafood?createDatabaseIfNotExist=true&useSSL=false
     username: ${DB_USER_MYSQL}
@@ -12,5 +12,5 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8081/eureka/
-
-
+  instance:
+    instance-id: ${spring.application.name}:${random.int}}
