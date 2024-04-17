@@ -4,20 +4,27 @@ import br.com.alurafood.pagamentos.dto.AtualizarPagamentoDto;
 import br.com.alurafood.pagamentos.dto.CadastrarPagamentoDto;
 import br.com.alurafood.pagamentos.dto.PagamentoDto;
 import br.com.alurafood.pagamentos.exception.PagamentoException;
+import br.com.alurafood.pagamentos.http.PedidoClient;
 import br.com.alurafood.pagamentos.model.Pagamento;
 import br.com.alurafood.pagamentos.model.enums.Status;
 import br.com.alurafood.pagamentos.repository.PagamentoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PagamentoService {
     private final PagamentoRepository pagamentoRepository;
     private final ModelMapper mapper;
+    @Autowired
+    private PedidoClient pedidoClient;
 
     public PagamentoDto criarPagamento(CadastrarPagamentoDto dto) {
         Pagamento pagamento = buildPagamento(dto);
@@ -98,5 +105,18 @@ public class PagamentoService {
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() -> new PagamentoException("Pagamento não encontrado"));
         pagamento.confirmar();
+        pedidoClient.atualizaPagamento(pagamento.getPedidoId());
+    }
+
+    public void alteraStatus(Long id) {
+        Optional<Pagamento> pagamento = pagamentoRepository.findById(id);
+
+        if (!pagamento.isPresent()) {
+            throw new EntityNotFoundException();
+        }
+
+        pagamento.get().setStatus(Status.CONFIRMADO_SEM_INTEGRACAO);
+        pagamentoRepository.save(pagamento.get());
+
     }
 }

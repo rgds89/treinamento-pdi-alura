@@ -4,6 +4,7 @@ import br.com.alurafood.pagamentos.dto.AtualizarPagamentoDto;
 import br.com.alurafood.pagamentos.dto.CadastrarPagamentoDto;
 import br.com.alurafood.pagamentos.dto.PagamentoDto;
 import br.com.alurafood.pagamentos.service.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class PagamentoController {
 
     @Transactional
     @PutMapping("/{id}/confirmar")
+    @CircuitBreaker(name = "atualizaPedido", fallbackMethod = "")
     public ResponseEntity<String> confirmarPagamento(@PathVariable Long id) {
         pagamentoService.confirmarPagamento(id);
         return ResponseEntity.ok("Pagamento  id " + id + " confirmado com sucesso");
@@ -73,5 +75,9 @@ public class PagamentoController {
     @GetMapping("/porta")
     public String getPorta(@Value("${local.server.port}") String porta) {
         return String.format("Requisição respondida pela instância executando na porta %s", porta);
+    }
+
+    public void pagamentoAutorizadoComIntegracaoPendente(Long id, Exception e){
+        pagamentoService.alteraStatus(id);
     }
 }
