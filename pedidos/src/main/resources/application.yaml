@@ -1,16 +1,16 @@
-server:
-  port: 0
+#server:
+#  port: 0
 spring:
   application:
     name: pedidos-ms
   datasource:
-    url: jdbc:mysql://localhost/pedido-alurafood?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:mysql://localhost:55001/pedido-alurafood?createDatabaseIfNotExist=true&useSSL=false
     username: ${DB_USER_MYSQL}
     password: ${DB_PASSWORD_MYSQL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8081/eureka/
-  instance:
-    instance-id: ${spring.application.name}:${random.int}}
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8081/eureka/
+#  instance:
+#    instance-id: ${spring.application.name}:${random.int}}
