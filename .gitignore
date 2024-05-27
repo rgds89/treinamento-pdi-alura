@@ -63,4 +63,6 @@ mvnw
 mvnw.cmd
 /.metadata/
 
-*/data
+
+/data
+/dbs/mysql/data

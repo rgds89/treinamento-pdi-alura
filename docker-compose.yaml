@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  db:
+    platform: linux/x86_64
+    image: mysql:8.0
+    container_name: mysql_container
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+      BIND-ADDRESS: 0.0.0.0
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    networks:
+      - alura
+  app-pedidos-ms:
+    build:
+      context: .
+      dockerfile: ./pedidos/Dockerfile
+      target: production
+    image: rgds89/pedidos-ms:latest
+    container_name: pedidos-ms
+    depends_on:
+      - db
+    ports:
+      - "8181:8080"
+    expose:
+      - 8080
+    environment:
+      - DB_HOST:db
+      - DB_USER:root
+      - DB_PASS:root
+    links:
+      - db
+    networks:
+      - alura
+
+volumes:
+  db:
+
+
+networks:
+  alura:
+    name: alura
+    driver: bridge
+    external: true
