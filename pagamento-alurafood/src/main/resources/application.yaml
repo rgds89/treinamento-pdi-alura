@@ -4,10 +4,15 @@ spring:
   application:
     name: pagamentos-ms
   datasource:
-    url: jdbc:mysql://localhost/pagamento-alurafood?createDatabaseIfNotExist=true&useSSL=false
-    username: ${DB_USER_MYSQL}
-    password: ${DB_PASSWORD_MYSQL}
+    url: jdbc:mysql://localhost:3306/pagamento-alurafood?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin2024
 eureka:
   client:
     serviceUrl:
@@ -21,3 +26,7 @@ resilience4j:
         slidingWindowSize: 3
         minimumNumberOfCalls: 2
         waitDurationInOpenState: 50s
+pagamento:
+  concluido:
+    queue:
+      name: pagamento.concluido

@@ -3,11 +3,13 @@ package br.com.alurafood.pagamentos.controller;
 import br.com.alurafood.pagamentos.dto.AtualizarPagamentoDto;
 import br.com.alurafood.pagamentos.dto.CadastrarPagamentoDto;
 import br.com.alurafood.pagamentos.dto.PagamentoDto;
+import br.com.alurafood.pagamentos.service.EnviaMensagem;
 import br.com.alurafood.pagamentos.service.PagamentoService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +26,14 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class PagamentoController {
     private final PagamentoService pagamentoService;
+    private final EnviaMensagem enviaMensagem;
 
     @PostMapping
     @Transactional
     public ResponseEntity<PagamentoDto> criarPagamento(@RequestBody @Valid CadastrarPagamentoDto dto, UriComponentsBuilder uriBuilder) {
         PagamentoDto pagamentoDto = pagamentoService.criarPagamento(dto);
         URI uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamentoDto.id()).toUri();
+        enviaMensagem.enviaPagamentoConcluido(pagamentoDto.id());
         return ResponseEntity.created(uri).body(pagamentoDto);
     }
 
