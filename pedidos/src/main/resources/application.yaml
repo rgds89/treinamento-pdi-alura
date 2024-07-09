@@ -8,6 +8,11 @@ spring:
     username: $DB_USER
     password: $DB_PASS
     driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin2024
 #eureka:
 #  client:
 #    serviceUrl:
