@@ -30,3 +30,5 @@ pagamento:
   concluido:
     queue:
       name: pagamento.concluido
+  exchange:
+    name: pagamento.exchange

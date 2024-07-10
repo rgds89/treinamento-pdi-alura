@@ -1,5 +1,6 @@
 package br.com.alurafood.pagamentos.service;
 
+import br.com.alurafood.pagamentos.dto.PagamentoDto;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,14 @@ import org.springframework.stereotype.Service;
 public class EnviaMensagem {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
     @Value("${pagamento.concluido.queue.name:pagamento.concluiido}")
     private String queueNamePagConluido;
 
-    public void enviaPagamentoConcluido(Long idPagamento){
-        Message msg = new Message(("Criei um pagamento com o id " + idPagamento).getBytes());
-        rabbitTemplate.send(queueNamePagConluido, msg);
+    @Value("${pagamento.exchange.name:pagamento.exchange}")
+    private String exchangePagamento;
+
+    public void enviaPagamentoConcluido(PagamentoDto pagamento){
+        rabbitTemplate.convertAndSend(exchangePagamento, "", pagamento);
     }
 }

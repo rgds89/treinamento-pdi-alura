@@ -33,7 +33,7 @@ public class PagamentoController {
     public ResponseEntity<PagamentoDto> criarPagamento(@RequestBody @Valid CadastrarPagamentoDto dto, UriComponentsBuilder uriBuilder) {
         PagamentoDto pagamentoDto = pagamentoService.criarPagamento(dto);
         URI uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamentoDto.id()).toUri();
-        enviaMensagem.enviaPagamentoConcluido(pagamentoDto.id());
+        enviaMensagem.enviaPagamentoConcluido(pagamentoDto);
         return ResponseEntity.created(uri).body(pagamentoDto);
     }
 
@@ -81,7 +81,7 @@ public class PagamentoController {
         return String.format("Requisição respondida pela instância executando na porta %s", porta);
     }
 
-    public void pagamentoAutorizadoComIntegracaoPendente(Long id, Exception e){
+    public void pagamentoAutorizadoComIntegracaoPendente(Long id, Exception e) {
         pagamentoService.alteraStatus(id);
     }
 }

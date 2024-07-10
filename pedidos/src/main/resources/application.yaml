@@ -19,3 +19,9 @@ spring:
 #      defaultZone: http://localhost:8081/eureka/
 #  instance:
 #    instance-id: ${spring.application.name}:${random.int}}
+pagamentos:
+  detalhes-pedido:
+    queue:
+      name: pagamentos.detalhes-pedido
+  exchange:
+    name: pagamento.exchange
