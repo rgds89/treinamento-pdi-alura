@@ -21,7 +21,7 @@ public class MessageAdapter implements JsonSerializer<Message>, JsonDeserializer
         var correlationId = (CorrelationId) context.deserialize(obj.get("correlationId"), CorrelationId.class);
         try {
             var payload = context.deserialize(obj.get("payload"), Class.forName(payloadType));
-            return new Message(correlationId, payload)
+            return new Message(correlationId, payload);
         } catch (ClassNotFoundException e) {
             throw new JsonParseException(e);
         }
