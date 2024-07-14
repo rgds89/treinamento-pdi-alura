@@ -1,4 +1,4 @@
-package br.com.alura.ecommerce;
+package br.com.alura.ecommerce.message;
 
 import com.google.gson.*;
 

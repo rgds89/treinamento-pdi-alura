@@ -1,11 +1,11 @@
-package br.com.alura.ecommerce;
+package br.com.alura.ecommerce.message;
 
 import java.util.UUID;
 
 public class CorrelationId {
     private String id;
 
-    CorrelationId(String title) {
+    public CorrelationId(String title) {
         id = title + "(" + UUID.randomUUID().toString() + ")";
     }
 

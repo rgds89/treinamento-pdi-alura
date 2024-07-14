@@ -1,5 +1,8 @@
 package br.com.alura.ecommerce;
 
+import br.com.alura.ecommerce.dispatcher.KafkaDispatcher;
+import br.com.alura.ecommerce.message.CorrelationId;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;

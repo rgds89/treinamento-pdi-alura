@@ -1,5 +1,7 @@
-package br.com.alura.ecommerce;
+package br.com.alura.ecommerce.dispatcher;
 
+import br.com.alura.ecommerce.message.CorrelationId;
+import br.com.alura.ecommerce.message.Message;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -8,11 +10,11 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-class KafkaDispatcher<T> implements Closeable {
+public class KafkaDispatcher<T> implements Closeable {
 
     private final KafkaProducer<String, Message<T>> producer;
 
-    KafkaDispatcher() {
+    public KafkaDispatcher() {
         this.producer = new KafkaProducer<>(properties());
     }
 
@@ -25,13 +27,13 @@ class KafkaDispatcher<T> implements Closeable {
         return properties;
     }
 
-    void send(String topic, String key, T payload, CorrelationId correlationId) throws ExecutionException, InterruptedException {
+    public void send(String topic, String key, T payload, CorrelationId correlationId) throws ExecutionException, InterruptedException {
         var future = sendAsync(topic, key, payload, correlationId);
         future.get();
     }
 
-    Future<RecordMetadata> sendAsync(String topic, String key, T payload, CorrelationId correlationId) {
-        var value = new Message<T>(correlationId, payload);
+    public Future<RecordMetadata> sendAsync(String topic, String key, T payload, CorrelationId correlationId) {
+        var value = new Message<T>(correlationId.continueWith("_" + topic), payload);
         var record = new ProducerRecord<>(topic, key, value);
         Callback callback = (data, ex) -> {
             if (ex != null) {
