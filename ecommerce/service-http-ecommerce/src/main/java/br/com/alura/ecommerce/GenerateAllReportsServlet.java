@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class GenerateAllReportsServlet extends HttpServlet {
@@ -23,7 +21,11 @@ public class GenerateAllReportsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
 
-            batchDispatcher.send("SEND_MESSAGE_TO_ALL_USERS", "USER_GENERATE_READING_REPORT", "USER_GENERATE_READING_REPORT");
+            batchDispatcher.send(
+                    "SEND_MESSAGE_TO_ALL_USERS",
+                    "USER_GENERATE_READING_REPORT",
+                    "USER_GENERATE_READING_REPORT",
+                    new CorrelationId(GenerateAllReportsServlet.class.getSimpleName()));
 
             System.out.println("Sent generate report to all usres");
             resp.setStatus(HttpServletResponse.SC_OK);
