@@ -1,19 +1,20 @@
 package br.com.alura.ecommerce;
 
-import br.com.alura.ecommerce.consumer.KafkaService;
+import br.com.alura.ecommerce.consumer.ConsumerService;
+import br.com.alura.ecommerce.consumer.ServiceRunner;
 import br.com.alura.ecommerce.message.Message;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
-public class CreateUserService {
+public class CreateUserService implements ConsumerService<Order> {
 
+    private static final int THREADS = 5;
     private final Connection connection;
+    private static final String TOPIC_NEW_ORDER = "ECOMMERCE_NEW_ORDER";
 
     CreateUserService() throws SQLException {
         String url = "jdbc:sqlite:target/users_database.db";
@@ -22,29 +23,23 @@ public class CreateUserService {
             connection.createStatement().execute("create table Users (" +
                     "uuid varchar(200) primary key," +
                     "email varchar(200))");
-        } catch(SQLException ex) {
+        } catch (SQLException ex) {
             // be careful, the sql could be wrong, be reallllly careful
             ex.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
-        var createUserService = new CreateUserService();
-        try (var service = new KafkaService<>(CreateUserService.class.getSimpleName(),
-                "ECOMMERCE_NEW_ORDER",
-                createUserService::parse,
-                Map.of())) {
-            service.run();
-        }
+    public static void main(String[] args) {
+        new ServiceRunner<>(CreateUserService::new).start(THREADS);
     }
 
-    private void parse(ConsumerRecord<String, Message<Order>> record) throws SQLException {
+    public void parse(ConsumerRecord<String, Message<Order>> record) throws SQLException {
         System.out.println("------------------------------------------");
         System.out.println("Processing new order, checking for new user");
         System.out.println(record.value());
         var message = record.value();
         var order = message.getPayload();
-        if(isNewUser(order.getEmail())) {
+        if (isNewUser(order.getEmail())) {
             insertNewUser(order.getEmail());
         }
     }
@@ -66,4 +61,13 @@ public class CreateUserService {
         return !results.next();
     }
 
+    @Override
+    public String getTopic() {
+        return TOPIC_NEW_ORDER;
+    }
+
+    @Override
+    public String getConsumerGroup() {
+        return CreateUserService.class.getSimpleName();
+    }
 }

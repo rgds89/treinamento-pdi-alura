@@ -1,6 +1,7 @@
 package br.com.alura.ecommerce;
 
-import br.com.alura.ecommerce.consumer.KafkaService;
+import br.com.alura.ecommerce.consumer.ConsumerService;
+import br.com.alura.ecommerce.consumer.ServiceRunner;
 import br.com.alura.ecommerce.dispatcher.KafkaDispatcher;
 import br.com.alura.ecommerce.message.Message;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -10,11 +11,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-public class BatchSendMessageService {
+public class BatchSendMessageService implements ConsumerService<String> {
 
+    private static final String TOPIC_ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS = "ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS";
+    private static final int THREADS = 5;
     private final Connection connection;
 
     BatchSendMessageService() throws SQLException {
@@ -30,19 +31,13 @@ public class BatchSendMessageService {
         }
     }
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
-        var batchService = new BatchSendMessageService();
-        try (var service = new KafkaService<>(BatchSendMessageService.class.getSimpleName(),
-                "ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS",
-                batchService::parse,
-                Map.of())) {
-            service.run();
-        }
+    public static void main(String[] args) {
+        new ServiceRunner<>(BatchSendMessageService::new).start(THREADS);
     }
 
     private final KafkaDispatcher<User> userDispatcher = new KafkaDispatcher<>();
 
-    private void parse(ConsumerRecord<String, Message<String>> record) throws SQLException, ExecutionException, InterruptedException {
+    public void parse(ConsumerRecord<String, Message<String>> record) throws Exception {
         System.out.println("------------------------------------------");
         System.out.println("Processing new batch");
         var message = record.value();
@@ -60,5 +55,15 @@ public class BatchSendMessageService {
             users.add(new User(results.getString(1)));
         }
         return users;
+    }
+
+    @Override
+    public String getTopic() {
+        return TOPIC_ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS;
+    }
+
+    @Override
+    public String getConsumerGroup() {
+        return BatchSendMessageService.class.getSimpleName();
     }
 }
