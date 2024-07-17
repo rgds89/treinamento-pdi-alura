@@ -9,7 +9,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.concurrent.ExecutionException;
 
 public class FraudDetectorService implements ConsumerService<Order> {
 
