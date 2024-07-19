@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>pix-consumer</module>
+        <module>pix-producer</module>
     </modules>
 
     <properties>
