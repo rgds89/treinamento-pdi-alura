@@ -66,3 +66,9 @@ mvnw.cmd
 
 /data
 /dbs/mysql/data
+
+### POSTGRES ###
+**/test_data_postgres
+**/postgres_data
+
+**/connectors
